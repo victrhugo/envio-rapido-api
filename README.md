@@ -147,7 +147,7 @@ Authorization: Bearer <seu_token>
 
 ## 📦 Documentação Postman
 Coleção disponível com todos os endpoints, exemplos de resposta, variáveis (`base_url`, `token_admin`) e scripts automáticos de login.  
-👉 [Acessar documentação Postman](https://www.postman.com)
+👉 [Acessar documentação Postman](https://documenter.getpostman.com/view/47278313/2sB3WvLHTf)
 
 ---
 
