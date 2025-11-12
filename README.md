@@ -42,7 +42,7 @@ API REST desenvolvida em **Java + Spring Boot**, responsável por criar e consul
 2. **Configure o arquivo `application.properties`:**
    ```properties
    server.port=8080
-   jwt.secret=chave-secreta-supersegura
+   jwt.secret=sua-chave-preferencial-secreta
    melhorenvio.base-url=https://sandbox.melhorenvio.com
    melhorenvio.services=
    ```
