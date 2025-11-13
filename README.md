@@ -6,7 +6,6 @@
 ![JWT](https://img.shields.io/badge/JWT-Security-blue?style=for-the-badge)
 ![Coverage](https://img.shields.io/badge/Test%20Coverage-82%25-brightgreen?style=for-the-badge)
 ![Status](https://img.shields.io/badge/STATUS-COMPLETO-success?style=for-the-badge)
-![License](https://img.shields.io/badge/LICENSE-MIT-purple?style=for-the-badge)
 
 ---
 
