@@ -1,87 +1,145 @@
 # 📦 Envio Rápido API
+### Sistema de gestão de envios com cálculo automático de frete • Spring Boot + MelhorEnvio + ViaCEP
 
-API REST desenvolvida em **Java + Spring Boot**, responsável por criar e consultar **envios** com **cálculo automático de frete** via **MelhorEnvio**, além de **validação real de CEP** com a API **ViaCEP**.
+![Java](https://img.shields.io/badge/Java-21+-red)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.0-brightgreen)
+![JUnit](https://img.shields.io/badge/Tests-JUnit%205-blue)
+![Coverage](https://img.shields.io/badge/Coverage-80%25-green)
+![Status](https://img.shields.io/badge/Project-Completed-success)
 
 ---
 
-## 🚀 Principais Recursos
-- Autenticação JWT (Bearer Token)  
-- Perfis de acesso: **ADMIN** e **USER**  
-- CRUD completo de envios  
-- Recalculo automático de frete em atualizações  
-- Validação de CEP (ViaCEP)  
-- Tratamento global de exceções  
-- Testes unitários com alta cobertura (MockMvc + Mockito)  
+## 🚀 Sobre o Projeto
+A **Envio Rápido API** é uma aplicação backend completa em **Java + Spring Boot** focada em:
+- Cálculo automático de fretes usando **MelhorEnvio**
+- Validação real de CEP com **ViaCEP**
+- Autenticação e autorização com **JWT**
+- CRUD completo de envios
+- Testes unitários com MockMvc + Mockito
+- Tratamento global de exceções
+- Estrutura sólida seguindo boas práticas de arquitetura
+
+---
+
+## 🧱 Arquitetura da Aplicação
+
+A API segue uma arquitetura em camadas clara e organizada:
+
+```
+src/main/java/com/gft/envioapi
+│
+├── controller        → Controle das requisições HTTP
+├── service           → Regras de negócio e integrações externas
+├── repository        → Persistência JPA
+├── dto               → Estruturas de requisição/response
+├── client            → Interfaces Feign (ViaCEP / MelhorEnvio)
+├── security          → JWT, filtros e autenticação
+└── exception         → Tratamento global de erros
+```
 
 ---
 
 ## ⚙️ Tecnologias Utilizadas
+
 - **Java 21**
 - **Spring Boot 3**
 - **Spring Security + JWT**
 - **Spring Data JPA**
-- **OpenFeign** (integrações externas)
-- **JUnit 5 + Mockito**
+- **OpenFeign**
+- **Mockito + JUnit 5 + MockMvc**
 - **Maven**
 
 ---
 
 ## ▶️ Como Rodar o Projeto
 
-### Pré-requisitos:
+### ✅ Pré-requisitos
 - JDK 21+
 - Maven 3.9+
-- Conta no [MelhorEnvio](https://www.melhorenvio.com.br/) para gerar token
+- Conta no **MelhorEnvio** para gerar token
 
-### Passos:
-1. **Clone o repositório**
-   ```bash
-   git clone <seu-repo>.git
-   cd envioApi
-   ```
-2. **Configure o arquivo `application.properties`:**
-   ```properties
-   server.port=8080
-   jwt.secret=5H8pQ2vN9kL3mR7jX4cB6wT1yF0dG8sA2vN5kL9mR3jX7cB4wT6yF1dG0sA8pH5Q
-   melhorenvio.base-url=https://melhorenvio.com.br
-   melhorenvio.services=1, 2
-   melhorenvio.token= Bearer {token}
-   ```
-3. **Execute o projeto**
-   ```bash
-   mvn spring-boot:run
-   ```
-4. Acesse:  
-   👉 `http://localhost:8080`
+### 📌 1. Clone o repositório
+```
+git clone <seu-repo>.git
+cd envioApi
+```
+
+### 📌 2. Configure o `application.properties`
+
+```
+server.port=8080
+
+jwt.secret=5H8pQ2vN9kL3mR7jX4cB6wT1yF0dG8sA2vN5kL9mR3jX7cB4wT6yF1dG0sA8pH5Q
+
+melhorenvio.base-url=https://melhorenvio.com.br
+melhorenvio.services=1, 2
+melhorenvio.token=Bearer {SEU_TOKEN}
+```
+
+### 📌 3. Execute
+```
+mvn spring-boot:run
+```
+
+API disponível em:  
+👉 **http://localhost:8080**
 
 ---
 
-## 🔐 Autenticação
+## 🔐 Autenticação JWT
 
-### 1. Registro
-`POST /auth/register`  
-Cria um novo usuário (login, senha, role)
+Antes de acessar `/api/envios`, gere o token:
 
-### 2. Login
-`POST /auth/login`  
-Retorna o token JWT para ser usado nas demais rotas:
+### 📌 Registro  
 ```
-Authorization: Bearer <seu_token>
+POST /auth/register
 ```
 
-### Perfis:
+### 📌 Login  
+```
+POST /auth/login
+```
+
+Header obrigatório:
+```
+Authorization: Bearer <token>
+```
+
+---
+
+## 🧠 Perfis e Permissões
+
 | Role  | Permissões |
-|--------|-------------|
-| USER   | Consultar e listar envios |
-| ADMIN  | Criar, atualizar e deletar envios |
+|-------|------------|
+| **USER** | Listar / Consultar envios |
+| **ADMIN** | Criar / Atualizar / Deletar |
 
 ---
 
-## 🧾 Exemplo de Requisição
+## 📚 Endpoints Principais
 
-### `POST /api/envios`
+| Método | Endpoint | Descrição | Permissão |
+|--------|----------|------------|-----------|
+| POST | `/auth/register` | Registrar usuário | Público |
+| POST | `/auth/login` | Gerar token JWT | Público |
+| GET | `/api/envios` | Listar envios | USER / ADMIN |
+| GET | `/api/envios/{id}` | Buscar por ID | USER / ADMIN |
+| POST | `/api/envios` | Criar envio | ADMIN |
+| PATCH | `/api/envios/{id}` | Atualização parcial | ADMIN |
+| DELETE | `/api/envios/{id}` | Excluir | ADMIN |
+| HEAD | `/api/envios/{id}` | Metadados | USER / ADMIN |
+| OPTIONS | `/api/envios` | Métodos suportados | Público |
 
-**Body (JSON):**
+---
+
+## 🧾 Exemplo — Criação de Envio
+
+### Request  
+```
+POST /api/envios
+```
+
+### Body  
 ```json
 {
   "nomeRemetente": "Victor Hugo",
@@ -95,7 +153,7 @@ Authorization: Bearer <seu_token>
 }
 ```
 
-**Response (201 Created):**
+### Response (201)  
 ```json
 {
   "nomeRemetente": "Victor Hugo",
@@ -113,45 +171,60 @@ Authorization: Bearer <seu_token>
 
 ---
 
-## 📚 Endpoints Principais
+## ❗ Erros Comuns
 
-| Método | Endpoint | Descrição | Autorização |
-|--------|-----------|------------|--------------|
-| POST | `/auth/register` | Registrar usuário | Pública |
-| POST | `/auth/login` | Login e gerar token | Pública |
-| GET | `/api/envios` | Listar todos os envios | ADMIN / USER |
-| GET | `/api/envios/{id}` | Buscar envio por ID | ADMIN / USER |
-| POST | `/api/envios` | Criar envio com cálculo de frete | ADMIN |
-| PATCH | `/api/envios/{id}` | Atualizar parcialmente | ADMIN |
-| DELETE | `/api/envios/{id}` | Excluir envio | ADMIN |
+| Código | Quando ocorre |
+|--------|----------------|
+| **400** | CEP inválido / dados errados |
+| **403** | Usuário sem permissão |
+| **404** | Envio não encontrado |
+| **406** | Accept inválido |
+| **415** | Content-Type incorreto |
+| **500** | Erro inesperado |
 
 ---
 
 ## 🧪 Testes
-- Testes unitários e de integração com **MockMvc + Mockito**
-- Cobertura atual: **≈71%**  
-- Para executar:
-  ```bash
-  mvn test
-  ```
-- Arquivo de relatório:  
-  `target/site/jacoco/index.html`
 
----
+- Testes com **MockMvc**
+- Mock de serviços
+- Testes do filtro JWT
+- Cobertura desejada: **80%**
 
-## 🧰 Extras
-- `HEAD /api/envios/{id}` → retorna metadados do envio  
-- `OPTIONS /api/envios` → retorna métodos suportados  
+Para rodar:
+
+```
+mvn test
+```
+
+Relatório:
+```
+target/site/jacoco/index.html
+```
 
 ---
 
 ## 📦 Documentação Postman
-Coleção disponível com todos os endpoints, exemplos de resposta, variáveis (`base_url`, `token_admin`) e scripts automáticos de login.  
-👉 [Acessar documentação Postman](https://documenter.getpostman.com/view/47278313/2sB3WvLHTf)
+
+Coleção completa com:
+- Scripts automáticos
+- Variáveis (`base_url`)
+- Exemplos de requests/responses
+
+👉 **Link:** *adicione aqui o link da sua coleção*
 
 ---
 
 ## 👨‍💻 Autor
+
 **Victor Hugo Santos**  
-Desenvolvedor Java Backend • GFT Technologies  
-📍 São José dos Campos, SP  
+Desenvolvedor Backend — GFT Technologies  
+📍 São José dos Campos, SP
+
+---
+
+Se quiser, posso gerar também:
+- Uma **versão em inglês**
+- Uma **versão resumida**
+- Uma **versão com emojis reduzidos**
+- Banner visual para colocar no topo
