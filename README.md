@@ -211,7 +211,7 @@ Coleção completa com:
 - Variáveis (`base_url`)
 - Exemplos de requests/responses
 
-👉 **Link:** *adicione aqui o link da sua coleção*
+👉 **Link:** [Acessar documentação Postman](https://documenter.getpostman.com/view/47278313/2sB3WvLHTf)
 
 ---
 
@@ -221,10 +221,3 @@ Coleção completa com:
 Desenvolvedor Backend — GFT Technologies  
 📍 São José dos Campos, SP
 
----
-
-Se quiser, posso gerar também:
-- Uma **versão em inglês**
-- Uma **versão resumida**
-- Uma **versão com emojis reduzidos**
-- Banner visual para colocar no topo
