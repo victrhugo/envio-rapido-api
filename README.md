@@ -122,7 +122,6 @@ Authorization: Bearer <seu_token>
 | GET | `/api/envios` | Listar todos os envios | ADMIN / USER |
 | GET | `/api/envios/{id}` | Buscar envio por ID | ADMIN / USER |
 | POST | `/api/envios` | Criar envio com cálculo de frete | ADMIN |
-| PUT | `/api/envios/{id}` | Atualizar envio (recalcula frete) | ADMIN |
 | PATCH | `/api/envios/{id}` | Atualizar parcialmente | ADMIN |
 | DELETE | `/api/envios/{id}` | Excluir envio | ADMIN |
 
