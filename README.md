@@ -43,8 +43,9 @@ API REST desenvolvida em **Java + Spring Boot**, responsável por criar e consul
    ```properties
    server.port=8080
    jwt.secret=sua-chave-preferencial-secreta
-   melhorenvio.base-url=https://sandbox.melhorenvio.com
-   melhorenvio.services=
+   melhorenvio.base-url=https://melhorenvio.com.br
+   melhorenvio.services=1, 2
+   melhorenvio.token= Bearer {token}
    ```
 3. **Execute o projeto**
    ```bash
