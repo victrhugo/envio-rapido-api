@@ -2,7 +2,6 @@ package com.gft.envioapi.service;
 
 import com.gft.envioapi.client.ViaCepClient;
 import feign.FeignException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -10,8 +9,11 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class CepValidatorService {
 
-    @Autowired
-    private ViaCepClient cepClient;
+    private final ViaCepClient cepClient;
+
+    public CepValidatorService(ViaCepClient cepClient) {
+        this.cepClient = cepClient;
+    }
 
     public void validar(String cep) {
         String cepLimpo = limparCep(cep);

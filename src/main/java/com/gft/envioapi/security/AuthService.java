@@ -22,6 +22,10 @@ public class AuthService {
         User user = userRepository.findByLogin(request.getLogin())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
+        if (user.getRole() == null) {
+            throw new RuntimeException("Usuário sem role definida");
+        }
+
         if (!passwordEncoder.matches(request.getSenha(), user.getSenha())) {
             throw new RuntimeException("Senha inválida");
         }

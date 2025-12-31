@@ -3,25 +3,31 @@ package com.gft.envioapi.service;
 import com.gft.envioapi.client.FreteClient;
 import com.gft.envioapi.dto.FreteInternoDTO;
 import feign.FeignException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.web.server.ResponseStatusException;
 
 
 @Service
 public class FreteCalculatorService {
 
-    @Autowired
-    private FreteClient freteClient;
+    private static final Logger logger = LoggerFactory.getLogger(FreteCalculatorService.class);
+    private final FreteClient freteClient;
+    private final String meServices;
 
-    @Value("${melhorenvio.services:}")
-    private String meServices;
+    public FreteCalculatorService(FreteClient freteClient,
+                                   @Value("${melhorenvio.services:}") String meServices) {
+        this.freteClient = freteClient;
+        this.meServices = meServices;
+    }
 
     public FreteInternoDTO calcularFrete(String cepOrigem, String cepDestino,
                                          double altura, double largura,
@@ -56,13 +62,13 @@ public class FreteCalculatorService {
             return freteClient.calcular(request);
         } catch (FeignException e) {
             tratarErroMelhorEnvio(e);
-            throw new RuntimeException("Erro inesperado ao calcular frete");
+            return List.of(); // Nunca será alcançado, mas necessário para compilação
         }
     }
 
     private void tratarErroMelhorEnvio(FeignException e) {
         String body = extrairBody(e);
-        System.err.println("Erro Melhor Envio - Status: " + e.status() + " | Body: " + body);
+        logger.error("Erro ao calcular frete no Melhor Envio - Status: {} | Body: {}", e.status(), body);
 
         if (e.status() == 401 || e.status() == 403) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
@@ -113,9 +119,14 @@ public class FreteCalculatorService {
         return cotacoes.stream()
                 .filter(q -> q.name() != null && q.name().equalsIgnoreCase(nomeServico))
                 .findFirst()
-                .map(q -> FreteInternoDTO.ServicoFreteDTO.disponivel(
-                        q.getPrecoEfetivo(),
-                        q.getPrecoEfetivo()
-                ));
+                .map(q -> {
+                    String valor = q.getPrecoEfetivo();
+                    Integer prazoInt = q.getPrazoEfetivo();
+                    String prazo = (prazoInt != null) ? String.valueOf(prazoInt) : "0";
+                    
+                    logger.debug("Serviço {} - Valor: {}, Prazo: {}", nomeServico, valor, prazo);
+                    
+                    return FreteInternoDTO.ServicoFreteDTO.disponivel(valor, prazo);
+                });
     }
 }

@@ -45,7 +45,6 @@ public interface FreteClient {
             @JsonProperty("weight") double weight
     ) {}
 
-
     @JsonIgnoreProperties(ignoreUnknown = true)
     record QuoteResponse(
             @JsonProperty("id") String id,

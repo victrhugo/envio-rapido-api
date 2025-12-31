@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.List;
 
 @Configuration
-public class OpenAiConfig {
+public class OpenApiConfig {
 
     @Bean
     public OpenAPI envioApi() {
@@ -46,3 +46,6 @@ public class OpenAiConfig {
                 ));
     }
 }
+
+
+

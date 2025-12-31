@@ -6,25 +6,26 @@ import com.gft.envioapi.entity.Frete;
 import com.gft.envioapi.exception.ResourceNotFoundException;
 import com.gft.envioapi.repository.EnvioRepository;
 import com.gft.envioapi.repository.FreteRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-
 @Service
 public class EnvioService {
 
+    private static final Logger logger = LoggerFactory.getLogger(EnvioService.class);
+    
     private final EnvioRepository envioRepository;
     private final CepValidatorService cepValidator;
     private final FreteCalculatorService freteCalculator;
     private final FreteRepository freteRepository;
 
-    @Autowired
     public EnvioService(EnvioRepository envioRepository,
                         CepValidatorService cepValidator,
                         FreteCalculatorService freteCalculator,
@@ -135,12 +136,21 @@ public class EnvioService {
 
     @Transactional
     public void deleteEnvio(Long envioId) {
-        if (!envioRepository.existsById(envioId)) {
-            throw new ResourceNotFoundException("Envio não encontrado com ID: " + envioId);
-        }
         var envio = obterEnvioPorId(envioId);
         freteRepository.findByEnvioEnvioId(envioId).ifPresent(freteRepository::delete);
         envioRepository.delete(envio);
+    }
+
+    @Transactional
+    public void recalcularTodosFretes() {
+        var envios = envioRepository.findAll();
+        for (var envio : envios) {
+            try {
+                recalcularEAtualizarFrete(envio);
+            } catch (Exception e) {
+                logger.error("Erro ao recalcular frete para envio {}: {}", envio.getEnvioId(), e.getMessage());
+            }
+        }
     }
 
     private void validarCeps(String cepOrigem, String cepDestino) {
